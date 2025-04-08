@@ -1,0 +1,93 @@
+CODE : 
+
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        res = nums[0]
+        l, r = 0, len(nums) - 1
+
+        while l <= r:
+            if nums[l] < nums[r]:
+                res = min(res, nums[l])
+                break
+            
+            m = (l + r) // 2 
+            res = min(res, nums[m]) 
+            if nums[m] >= nums[l]:
+                l = m + 1 
+            else:
+                r = m - 1 
+        return res 
+
+Explaination : 
+
+🔍 Problem Statement
+You're given an array nums which is sorted in ascending order, but then rotated at some unknown pivot.
+
+Example of such an array:
+
+less
+Copy code
+Original sorted array: [1, 2, 3, 4, 5]
+After rotation:        [3, 4, 5, 1, 2]
+You need to find the minimum element in this rotated array using binary search for efficiency.
+
+🧠 Code Explanation
+python
+Copy code
+res = nums[0]
+l, r = 0, len(nums) - 1
+Start with res as the first element (we'll update it if we find a smaller one).
+
+l and r are the left and right pointers for binary search.
+
+🔁 Binary Search Loop
+python
+Copy code
+while l <= r:
+Keep looping while the search space is valid.
+
+✅ If subarray is already sorted
+python
+Copy code
+if nums[l] < nums[r]:
+    res = min(res, nums[l])
+    break
+If the subarray between l and r is already sorted, then the leftmost element nums[l] is the smallest in this subarray.
+✅ So, update res and break out of the loop — we're done!
+
+🔍 Find the Middle and Update Result
+python
+Copy code
+m = (l + r) // 2
+res = min(res, nums[m])
+Check the middle element and update res if it's smaller.
+
+🧭 Decide Which Half to Search Next
+python
+Copy code
+if nums[m] >= nums[l]:
+    l = m + 1
+else:
+    r = m - 1
+This part determines which side of the array might contain the minimum:
+
+If nums[m] >= nums[l], it means the left half is sorted, so the minimum must be in the right half → search right (l = m + 1)
+
+Else, the right half is unsorted, so the minimum is in the left half → search left (r = m - 1)
+
+🏁 Return Result
+python
+Copy code
+return res
+After the loop ends, res will hold the minimum element in the array.
+
+📈 Time Complexity
+O(log n) — because it uses binary search.
+
+✅ Example
+python
+Copy code
+nums = [4, 5, 6, 7, 0, 1, 2]
+The array is rotated.
+
+The binary search narrows down the range and finds that the minimum is 0.
