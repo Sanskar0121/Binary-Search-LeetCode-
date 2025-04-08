@@ -1,0 +1,107 @@
+CODE: 
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+        l, r = 1, max(piles) 
+        res = r 
+
+        while l <= r:
+            k = (l + r) // 2
+
+            totalTime = 0 
+            for p in piles:
+                totalTime += math.ceil(float(p) / k)
+            if totalTime <= h:
+                res = k 
+                r = k - 1
+            else:
+                l = k + 1 
+        return res 
+
+explaination : 
+
+ChatGPT said:
+Great! Now you're looking at the optimized version of the same "Koko Eating Bananas" problem — this one uses binary search instead of trying every speed one by one. Let's walk through it in simple terms.
+
+🍌 Problem Recap
+Given:
+
+piles: list of piles of bananas.
+
+h: total hours Koko has to finish all the bananas.
+
+Goal:
+
+Find the minimum integer speed k (bananas per hour) so that Koko finishes all bananas within h hours.
+
+🚀 Binary Search Approach
+Instead of checking every speed from 1 to max(piles) like in the brute-force method, we do a binary search between these values to find the minimum valid speed.
+
+🔍 Code Breakdown
+python
+Copy code
+l, r = 1, max(piles)
+res = r
+l and r are the left and right bounds of our search range.
+
+Lowest possible eating speed is 1 banana/hour.
+
+Highest possible eating speed is max(piles) (if she eats a whole pile in 1 hour).
+
+res stores the best (minimum) valid speed found so far.
+
+🔁 Binary Search Loop
+python
+Copy code
+while l <= r:
+    k = (l + r) // 2
+k is the middle value — current speed we are testing.
+
+⏳ Calculate Time Needed for This Speed
+python
+Copy code
+totalTime = 0
+for p in piles:
+    totalTime += math.ceil(float(p) / k)
+For each pile, compute how many hours it takes to eat it at speed k.
+
+Use ceil because even if a pile is partly eaten in an hour, it still counts as a full hour.
+
+✅ Check if Koko Can Finish in Time
+python
+Copy code
+if totalTime <= h:
+    res = k
+    r = k - 1
+If Koko can eat all the bananas in h or less hours:
+
+We save this speed as a possible answer (res = k).
+
+Try to find a lower speed by moving r to k - 1.
+
+python
+Copy code
+else:
+    l = k + 1
+If she takes more than h hours, it means the speed is too slow, so we move l to k + 1 to try higher speeds.
+
+🏁 Return the Result
+python
+Copy code
+return res
+This gives the minimum valid speed that lets her finish in time.
+
+📈 Time Complexity
+The binary search runs in O(log(max(piles))).
+
+For each guess, we calculate totalTime in O(n) where n = len(piles).
+
+👉 So, total time complexity is O(n * log(max(piles))) — much faster than brute-force!
+
+🔍 Example
+python
+Copy code
+piles = [3, 6, 7, 11]
+h = 8
+Binary search tries different speeds between 1 and 11.
+
+Eventually finds that speed = 4 is the minimum speed to finish in 8 hours.
