@@ -1,0 +1,117 @@
+CODE : 
+class TimeMap:
+
+    def __init__(self):
+        self.keyStore = {} 
+        
+
+    def set(self, key: str, value: str, timestamp: int) -> None:
+        if key not in self.keyStore:
+            self.keyStore[key] = [] 
+        self.keyStore[key].append([value, timestamp])
+        
+
+    def get(self, key: str, timestamp: int) -> str:
+        res, values = "", self.keyStore.get(key, []) 
+        l, r = 0, len(values) - 1
+        while l <= r:
+            m = (l + r) // 2
+            if values[m][1] <= timestamp:
+                res = values[m][0] 
+                l = m + 1
+            else:
+                r = m - 1
+        return res 
+
+
+# Your TimeMap object will be instantiated and called as such:
+# obj = TimeMap()
+# obj.set(key,value,timestamp)
+# param_2 = obj.get(key,timestamp) 
+
+Explaination : 
+Absolutely! You're looking at a class implementation of a Time-based Key-Value Store, also known from the "TimeMap" problem (commonly seen in Leetcode). Let's go through it line by line in simple terms.
+
+🧠 Problem Summary
+You need to build a class TimeMap that supports:
+
+set(key, value, timestamp) — Store the key with the given value at the given timestamp.
+
+get(key, timestamp) — Return the value associated with the key at the largest timestamp ≤ given timestamp. If no such timestamp, return an empty string.
+
+🔍 Code Breakdown
+1. Constructor
+python
+Copy code
+def __init__(self):
+    self.keyStore = {}  # key : list of [val, timestamp]
+Initializes an empty dictionary keyStore.
+
+For each key, we store a list of [value, timestamp] pairs, sorted by timestamp automatically since we always append in order.
+
+2. set() Method
+python
+Copy code
+def set(self, key: str, value: str, timestamp: int) -> None:
+    if key not in self.keyStore:
+        self.keyStore[key] = []
+    self.keyStore[key].append([value, timestamp])
+If the key doesn't exist, initialize it with an empty list.
+
+Append the [value, timestamp] pair to the key's list.
+
+✅ This list will stay sorted by timestamp because timestamps are always given in increasing order.
+
+3. get() Method
+python
+Copy code
+def get(self, key: str, timestamp: int) -> str:
+Retrieve the most recent value that was set at or before the given timestamp.
+
+python
+Copy code
+res, values = "", self.keyStore.get(key, [])
+values is the list of [value, timestamp] pairs for the given key. If key doesn’t exist, use empty list.
+
+res is the result to return — initially an empty string.
+
+🔁 Binary Search to Find Closest Timestamp ≤ Given Timestamp
+python
+Copy code
+l, r = 0, len(values) - 1
+while l <= r:
+    m = (l + r) // 2
+    if values[m][1] <= timestamp:
+        res = values[m][0]  # possible candidate, but check for better match
+        l = m + 1
+    else:
+        r = m - 1
+Standard binary search:
+
+If values[m][1] (current timestamp) is ≤ given timestamp:
+
+It's a valid candidate, but there might be a better (closer) one to the right.
+
+So, move left pointer to m + 1.
+
+If it's too big, move right pointer to m - 1.
+
+This finds the latest value whose timestamp is ≤ the one you asked for.
+
+✅ Return the Result
+python
+Copy code
+return res
+res is either the matched value or "" if no valid timestamp was found.
+
+🧪 Example
+python
+Copy code
+obj = TimeMap()
+obj.set("foo", "bar", 1)
+obj.get("foo", 1)    # Returns "bar"
+obj.get("foo", 3)    # Also returns "bar" since 1 <= 3, and no value was set at 2 or 3
+✅ Time Complexity
+set: O(1) — just an append.
+
+get: O(log n) — binary search over timestamps. 
