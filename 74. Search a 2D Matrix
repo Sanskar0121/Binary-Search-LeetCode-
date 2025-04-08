@@ -1,0 +1,117 @@
+CODE :
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        ROWS, COLS = len(matrix), len(matrix[0]) 
+
+        top, bot = 0, ROWS - 1
+        while top <= bot:
+            row = (top + bot) // 2
+            if target > matrix[row][-1]:
+                top = row + 1 
+            elif target < matrix[row][0]:
+                bot = row - 1
+            else:
+                break 
+        
+        if not (top <= bot):
+            return False
+        row = (top + bot) // 2
+        l, r = 0, COLS - 1
+        while l <= r: 
+            m = (l + r) // 2 
+            if target > matrix[row][m]:
+                l = m + 1
+            elif target < matrix[row][m]:
+                r = m - 1
+            else:
+                return True
+        return False 
+
+EXPLAINATION : 
+This function searches for a target value in a 2D matrix, and it does it efficiently using binary search twice.
+
+📌 Problem Assumption
+The matrix follows these rules:
+
+Integers in each row are sorted from left to right.
+
+The first integer of each row is greater than the last integer of the previous row.
+
+So, the matrix can be "visualized" as a sorted 1D list, even though it's 2D.
+
+Example:
+
+python
+Copy code
+matrix = [
+  [1,  3,  5,  7],
+  [10, 11, 16, 20],
+  [23, 30, 34, 60]
+]
+🔍 Step-by-Step Code Explanation
+1. Get matrix dimensions
+python
+Copy code
+ROWS, COLS = len(matrix), len(matrix[0])
+This stores the number of rows and columns of the matrix.
+
+⬆️ First Binary Search (to find the correct row)
+python
+Copy code
+top, bot = 0, ROWS - 1
+while top <= bot:
+    row = (top + bot) // 2
+    if target > matrix[row][-1]:       # If target is greater than the last element of the row
+        top = row + 1
+    elif target < matrix[row][0]:      # If target is less than the first element of the row
+        bot = row - 1
+    else:
+        break                          # Target is within the range of this row
+👉 This binary search finds the row which may contain the target value.
+
+If the target is greater than the last element of a row → move down to the next row.
+
+If the target is less than the first element → move up to the previous row.
+
+If the target lies between first and last elements of a row → that's our row.
+
+🛑 If No Row Found
+python
+Copy code
+if not (top <= bot):
+    return False
+This checks if a valid row was found. If not, target doesn't exist in matrix.
+
+➡️ Second Binary Search (to search within that row)
+python
+Copy code
+row = (top + bot) // 2
+l, r = 0, COLS - 1
+while l <= r: 
+    m = (l + r) // 2 
+    if target > matrix[row][m]:
+        l = m + 1
+    elif target < matrix[row][m]:
+        r = m - 1
+    else:
+        return True
+This part searches within the selected row, using standard binary search.
+
+If target is greater than mid element → move right
+
+If target is smaller → move left
+
+If equal → return True
+
+❌ If not found
+python
+Copy code
+return False
+If the second binary search ends without finding the target, return False.
+
+✅ Time Complexity
+First binary search → O(log(rows))
+
+Second binary search → O(log(cols))
+
+Total Time Complexity: O(log(rows) + log(cols))
