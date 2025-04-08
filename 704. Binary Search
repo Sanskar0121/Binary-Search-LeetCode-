@@ -1,0 +1,99 @@
+CODE :
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        l, r = 0, len(nums) - 1
+
+        while l <= r:
+            # (l + r) // 2 can lead to overflow
+            m = l + ((r - l) // 2)  
+
+            if nums[m] > target:
+                r = m - 1
+            elif nums[m] < target:
+                l = m + 1
+            else:
+                return m
+        return -1
+
+Explaination : 
+
+🔍 Goal:
+Find the index of the target number in a sorted list using binary search.
+
+📦 Example:
+Imagine you have a sorted list:
+
+python
+Copy code
+nums = [1, 3, 5, 7, 9, 11]
+target = 7
+You want to find the index of 7 in this list. Since it's sorted, binary search is a fast way to do it.
+
+🧠 How Binary Search Works (Concept):
+Look at the middle element.
+
+If it's the target, return the index.
+
+If the target is smaller, search the left half.
+
+If the target is bigger, search the right half.
+
+Repeat until found or until there’s nothing left to search.
+
+🔍 Code Explained Line-by-Line:
+python
+Copy code
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+This is a class with a method search that takes a list nums and a target number to find.
+
+python
+Copy code
+        l, r = 0, len(nums) - 1
+Initialize two pointers:
+
+l (left) starts at the beginning of the list.
+
+r (right) starts at the end of the list.
+
+python
+Copy code
+        while l <= r:
+Keep searching while there's a valid search range (left is before or equal to right).
+
+python
+Copy code
+            m = l + ((r - l) // 2)
+Find the middle index m.
+Why not just (l + r) // 2?
+Because l + r could be too large and cause overflow in some languages (not Python, but it's a good habit to avoid it).
+
+python
+Copy code
+            if nums[m] > target:
+                r = m - 1
+If the middle element is bigger than the target, the target must be on the left side — so move the right pointer left.
+
+python
+Copy code
+            elif nums[m] < target:
+                l = m + 1
+If the middle element is smaller than the target, the target must be on the right side — so move the left pointer right.
+
+python
+Copy code
+            else:
+                return m
+If the middle element is equal to the target, return the index m.
+
+python
+Copy code
+        return -1
+If we exit the loop, it means the target is not in the list, so return -1.
+
+✅ Final Summary:
+This code efficiently searches for a target value in a sorted list using binary search.
+Time Complexity: O(log n) — very fast for large lists.
+
+Let me know if you want me to add a dry run or example output too!
